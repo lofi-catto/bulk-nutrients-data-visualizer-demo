@@ -1,6 +1,6 @@
 const fetch = require("cross-fetch");
 const { response } = require("express");
-const { checkProperties, transformData, removeDuplicates } = require("./util");
+const { checkProperties, transformData } = require("./util");
 const EXTRERNAL_URL =
   "https://secure.bulknutrients.com.au/content/bEzWsxcHPewMt/sampledata.json";
 
@@ -38,8 +38,58 @@ const getData = async (req, res = response) => {
   }
 };
 
+// group all data into products
+const getProductGroups = async (req, res = response) => {
+  const groups = PROCESSED.reduce((groups, item) => {
+    const group = groups[item.sample.sku] || [];
+    group.push(item);
+    groups[item.sample.sku] = group;
+    return groups;
+  }, {});
+
+  res.json(groups);
+};
+
+// group all data into day of week
+const getStateGroups = async (req, res = response) => {
+  const groups = PROCESSED.reduce((groups, item) => {
+    const group = groups[item.stateByCode] || [];
+    group.push(item);
+    groups[item.stateByCode] = group;
+    return groups;
+  }, {});
+
+  res.json(groups);
+};
+
+// group all data into products then order by count
 const getMostPopular = async (req, res = response) => {
-  res.json(PROCESSED);
+  const arr = [];
+  const groups = PROCESSED.reduce((groups, item) => {
+    const group = groups[item.sample.sku] || [];
+    group.push(item);
+    groups[item.sample.sku] = group;
+    return groups;
+  }, {});
+
+  for (const [key, value] of Object.entries(groups)) {
+    arr.push({
+      sku: `${key}`,
+      orders: value,
+      count: value.length,
+    });
+  }
+
+  arr.sort(function (a, b) {
+    var keyA = a.count,
+      keyB = b.count;
+    // Compare the 2 counts
+    if (keyA < keyB) return 1;
+    if (keyA > keyB) return -1;
+    return 0;
+  });
+
+  res.json(arr);
 };
 
 const processData = (data) => {
@@ -52,6 +102,8 @@ const processData = (data) => {
 
 module.exports = {
   getExternalData,
+  getProductGroups,
+  getStateGroups,
   getMostPopular,
   getData,
 };

@@ -3,11 +3,15 @@ const router = Router();
 
 const {
   getData,
-  getMostPopular,
+  getProductGroups,
   getExternalData,
+  getMostPopular,
+  getStateGroups,
 } = require("../controllers/home.controller");
 
 router.get("/data", getData);
+router.get("/product-groups", getProductGroups);
+router.get("/state-groups", getStateGroups);
 router.get("/popular", getMostPopular);
 router.get("/external", getExternalData);
 
