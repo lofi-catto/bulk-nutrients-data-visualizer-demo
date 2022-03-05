@@ -1,21 +1,9 @@
 import { useState, useEffect } from "react";
-import BarChart from "./components/BarChart";
+import MostPopularProduct from "./views/MostPopularProduct";
+import DayOfWeek from "./views/DayOfWeek";
 // import { UserData } from "./Data";
 
 import { getMostPopular } from "./api/index";
-
-const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: "top",
-    },
-    title: {
-      display: true,
-      text: "Chart.js Bar Chart",
-    },
-  },
-};
 
 const defaultData = {
   labels: [],
@@ -28,29 +16,10 @@ const defaultData = {
 };
 
 function App() {
-  const [chartData, setChartData] = useState(defaultData);
-
-  useEffect(() => {
-    getMostPopular().then((res) => {
-      setChartData({
-        labels: res.map((item) => item.friendlyName),
-        datasets: [
-          {
-            label: "Most popular samples",
-            data: res.map((item) => item.count),
-            backgroundColor: "rgba(53, 162, 235, 0.5)",
-            borderWidth: 2,
-          },
-        ],
-      });
-    });
-  }, []);
-
   return (
     <div className="App">
-      <div style={{ width: 700 }}>
-        <BarChart options={options} chartData={chartData} />
-      </div>
+      <MostPopularProduct defaultData={defaultData} />
+      <DayOfWeek defaultData={defaultData} />
     </div>
   );
 }
