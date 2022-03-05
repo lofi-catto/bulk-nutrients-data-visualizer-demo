@@ -1,6 +1,6 @@
 const fetch = require("cross-fetch");
 const { response } = require("express");
-const { checkProperties, transformData } = require("./util");
+const { checkProperties, transformData, removeDuplicates } = require("./util");
 const EXTRERNAL_URL =
   "https://secure.bulknutrients.com.au/content/bEzWsxcHPewMt/sampledata.json";
 
@@ -43,6 +43,8 @@ const getMostPopular = async (req, res = response) => {
 };
 
 const processData = (data) => {
+  // check for missing properties in original data
+  // transform original data into the needed format
   let newData = transformData(checkProperties(data));
 
   return newData;
