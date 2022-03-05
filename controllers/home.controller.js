@@ -87,6 +87,7 @@ const getMostPopular = async (req, res = response) => {
   for (const [key, value] of Object.entries(groups)) {
     arr.push({
       sku: `${key}`,
+      friendlyName: value[0].sample.product,
       orders: value,
       count: value.length,
     });
