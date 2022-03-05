@@ -50,12 +50,24 @@ const getProductGroups = async (req, res = response) => {
   res.json(groups);
 };
 
-// group all data into day of week
+// group all data into state
 const getStateGroups = async (req, res = response) => {
   const groups = PROCESSED.reduce((groups, item) => {
     const group = groups[item.stateByCode] || [];
     group.push(item);
     groups[item.stateByCode] = group;
+    return groups;
+  }, {});
+
+  res.json(groups);
+};
+
+// group all data into day of week
+const getDayGroups = async (req, res = response) => {
+  const groups = PROCESSED.reduce((groups, item) => {
+    const group = groups[item.dayOfWeek] || [];
+    group.push(item);
+    groups[item.dayOfWeek] = group;
     return groups;
   }, {});
 
@@ -104,6 +116,7 @@ module.exports = {
   getExternalData,
   getProductGroups,
   getStateGroups,
+  getDayGroups,
   getMostPopular,
   getData,
 };
