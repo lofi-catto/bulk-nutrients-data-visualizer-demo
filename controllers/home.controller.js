@@ -44,6 +44,7 @@ const getData = async (req, res = response) => {
 
 // group all data into products
 const getProductGroups = async (req, res = response) => {
+  const arr = [];
   const groups = PROCESSED.reduce((groups, item) => {
     const group = groups[item.sample.sku] || [];
     group.push(item);
@@ -51,7 +52,16 @@ const getProductGroups = async (req, res = response) => {
     return groups;
   }, {});
 
-  res.json(groups);
+  for (const [key, value] of Object.entries(groups)) {
+    arr.push({
+      sku: `${key}`,
+      groupName: `${value[0].sample.product}`,
+      orders: value,
+      count: value.length,
+    });
+  }
+
+  res.json(arr);
 };
 
 // group all data into state

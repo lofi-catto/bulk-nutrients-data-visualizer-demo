@@ -1,12 +1,12 @@
 import React, { MouseEvent, useRef } from "react";
 import { Chart as ChartJS } from "chart.js/auto";
 
-import { InteractionItem } from "chart.js";
+// import { InteractionItem } from "chart.js";
 import {
   Doughnut,
-  getDatasetAtEvent,
+  // getDatasetAtEvent,
   getElementAtEvent,
-  getElementsAtEvent,
+  // getElementsAtEvent,
 } from "react-chartjs-2";
 
 function DoughnutChart({ options, chartData, onClickSection }) {
@@ -29,10 +29,12 @@ function DoughnutChart({ options, chartData, onClickSection }) {
     //   chartData.datasets[datasetIndex].backgroundColor[index]
     // );
 
-    onClickSection(
-      chartData.labels[index],
-      chartData.datasets[datasetIndex].backgroundColor[index]
-    );
+    if (onClickSection) {
+      onClickSection(
+        chartData.labels[index],
+        chartData.datasets[datasetIndex].backgroundColor[index]
+      );
+    }
   };
 
   // const printElementsAtEvent = (elements) => {

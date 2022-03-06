@@ -3,7 +3,7 @@ import MostPopularProduct from "./views/MostPopularProduct";
 import DayOfWeek from "./views/DayOfWeek";
 import SamplesByState from "./views/SamplesByState";
 import FlavourBreakdown from "./views/FlavourBreakdown";
-// import { UserData } from "./Data";
+import ProductBreakdown from "./views/ProductBreakdown";
 
 import { getMostPopular } from "./api/index";
 
@@ -24,6 +24,7 @@ function App() {
       <DayOfWeek defaultData={defaultData} />
       <SamplesByState defaultData={defaultData} />
       <FlavourBreakdown defaultData={defaultData} />
+      <ProductBreakdown defaultData={defaultData} />
     </div>
   );
 }
