@@ -3,7 +3,9 @@
 Prerequisite
 - NODE v16
 
-TO RUN PROJECT
+To run project
+
+create .env with PORT=8080
 
 cd data-visualizer
 npm install
