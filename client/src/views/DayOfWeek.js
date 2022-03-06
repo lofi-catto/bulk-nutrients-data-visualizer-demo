@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import LineChart from "../components/LineChart";
-// import { UserData } from "./Data";
 
 import { getDayGroups } from "../api/index";
 

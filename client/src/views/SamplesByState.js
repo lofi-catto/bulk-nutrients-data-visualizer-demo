@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import BarChart from "../components/BarChart";
-// import { UserData } from "./Data";
 
 import { getStateGroups } from "../api/index";
 

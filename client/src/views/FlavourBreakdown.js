@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
+
 import DoughnutChart from "../components/DoughnutChart";
-// import { UserData } from "./Data";
+import BarChart from "../components/BarChart";
 
 import { getFlavourGroups } from "../api/index";
 
-const options = {
-  indexAxis: "y",
+const doughnutChartDataOptions = {
   responsive: true,
   plugins: {
     legend: {
@@ -14,6 +14,29 @@ const options = {
     title: {
       display: true,
       text: "Flavour breakdown across all products",
+    },
+  },
+};
+
+const defautlBarChartData = {
+  labels: [],
+  datasets: [
+    {
+      label: "Flavour",
+      data: [],
+    },
+  ],
+};
+
+const barChartDataOptions = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: "top",
+    },
+    title: {
+      display: true,
+      text: "Product breakdown in a flavour",
     },
   },
 };
@@ -38,15 +61,20 @@ function generateColours(length) {
   return colors;
 }
 
+let DATA_SET = [];
+
 function FlavourBreakdown({ defaultData }) {
-  const [chartData, setChartData] = useState(defaultData);
+  const [doughnutChartData, setDoughnutChartData] = useState(defaultData);
+  const [barChartData, setBarChartData] = useState(defautlBarChartData);
 
   useEffect(() => {
     getFlavourGroups().then((res) => {
-      setChartData({
+      DATA_SET = res;
+      setDoughnutChartData({
         labels: res.map((item) => item.groupName),
         datasets: [
           {
+            label: "Flavour Dataset",
             data: res.map((item) => item.count),
             backgroundColor: generateColours(res.length),
           },
@@ -55,9 +83,57 @@ function FlavourBreakdown({ defaultData }) {
     });
   }, []);
 
+  // group all data into products
+  const getProductGroups = (data) => {
+    const arr = [];
+    const groups = data.reduce((groups, item) => {
+      const group = groups[item.sample.sku] || [];
+      group.push(item);
+      groups[item.sample.sku] = group;
+      return groups;
+    }, {});
+
+    for (const [key, value] of Object.entries(groups)) {
+      arr.push({
+        sku: `${key}`,
+        groupName: `${value[0].sample.product}`,
+        orders: value,
+        count: value.length,
+      });
+    }
+
+    return arr;
+  };
+
+  const onClickSection = (flavour, color) => {
+    const flavourSet = DATA_SET.filter((d) => d.groupName === flavour);
+    const orders = flavourSet[0].orders;
+    const data = getProductGroups(orders);
+
+    setBarChartData({
+      labels: data.map((item) => item.groupName),
+      datasets: [
+        {
+          label: `${flavourSet[0].groupName}`,
+          data: data.map((item) => item.count),
+          backgroundColor: color,
+        },
+      ],
+    });
+  };
+
   return (
-    <div style={{ width: 700 }}>
-      <DoughnutChart options={options} chartData={chartData} />
+    <div style={{ display: "flex" }}>
+      <div style={{ width: "50%" }}>
+        <DoughnutChart
+          onClickSection={onClickSection}
+          options={doughnutChartDataOptions}
+          chartData={doughnutChartData}
+        />
+      </div>
+      <div style={{ width: "50%" }}>
+        <BarChart options={barChartDataOptions} chartData={barChartData} />
+      </div>
     </div>
   );
 }
