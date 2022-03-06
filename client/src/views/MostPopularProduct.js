@@ -5,7 +5,6 @@ import BarChart from "../components/BarChart";
 import { getMostPopular } from "../api/index";
 
 const options = {
-  indexAxis: "y",
   responsive: true,
   plugins: {
     legend: {

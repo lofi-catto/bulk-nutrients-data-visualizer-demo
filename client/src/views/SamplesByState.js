@@ -5,6 +5,7 @@ import BarChart from "../components/BarChart";
 import { getStateGroups } from "../api/index";
 
 const options = {
+  indexAxis: "y",
   responsive: true,
   plugins: {
     legend: {

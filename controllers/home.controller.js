@@ -1,6 +1,10 @@
 const fetch = require("cross-fetch");
 const { response } = require("express");
-const { checkProperties, transformData } = require("./util");
+const {
+  checkProperties,
+  transformData,
+  checkEmptyProperties,
+} = require("./util");
 const EXTRERNAL_URL =
   "https://secure.bulknutrients.com.au/content/bEzWsxcHPewMt/sampledata.json";
 
@@ -54,9 +58,30 @@ const getProductGroups = async (req, res = response) => {
 const getStateGroups = async (req, res = response) => {
   const arr = [];
   const groups = PROCESSED.reduce((groups, item) => {
-    const group = groups[item.stateByCode] || [];
+    const group = groups[item.state] || [];
     group.push(item);
-    groups[item.stateByCode] = group;
+    groups[item.state] = group;
+    return groups;
+  }, {});
+
+  for (const [key, value] of Object.entries(groups)) {
+    arr.push({
+      groupName: `${key}`,
+      orders: value,
+      count: value.length,
+    });
+  }
+
+  res.json(arr);
+};
+
+// group all data into flavours
+const getFlavourGroups = async (req, res = response) => {
+  const arr = [];
+  const groups = PROCESSED.reduce((groups, item) => {
+    const group = groups[item.sample.flavour] || [];
+    group.push(item);
+    groups[item.sample.flavour] = group;
     return groups;
   }, {});
 
@@ -125,8 +150,9 @@ const getMostPopular = async (req, res = response) => {
 
 const processData = (data) => {
   // check for missing properties in original data
+  // check for empty properties in original data
   // transform original data into the needed format
-  let newData = transformData(checkProperties(data));
+  let newData = transformData(checkEmptyProperties(checkProperties(data)));
 
   return newData;
 };
@@ -136,6 +162,7 @@ module.exports = {
   getProductGroups,
   getStateGroups,
   getDayGroups,
+  getFlavourGroups,
   getMostPopular,
   getData,
 };

@@ -16,6 +16,19 @@ const countProperties = (d) => {
   return count === PROPERTIES.length;
 };
 
+//filter data with empty properties
+const checkEmptyProperties = (data) => {
+  return data.filter((d) => {
+    let count = 0;
+    for (let i = 0; i < PROPERTIES.length; i++) {
+      if (d[PROPERTIES[i].name]) {
+        count++;
+      }
+    }
+    return count === PROPERTIES.length;
+  });
+};
+
 //  Any data with the same full name, postcode and state will be considered duplicated
 removeDuplicates = (arr) => {
   const uniqueIds = new Set();
@@ -40,14 +53,34 @@ removeDuplicates = (arr) => {
   return unique;
 };
 
+const removeDefected = (arr) => {
+  //remove defected data (input state does not match state from postcode or both equal -1)
+  //keep the state with -1, we can use the state from postcode for it instead and vise versa
+  let transformed = arr.filter(
+    (t) =>
+      (t.state === t.stateByCode && t.state !== "-1") ||
+      (t.state === "-1" && t.stateByCode) ||
+      (t.state && t.stateByCode === "-1")
+  );
+
+  const newArray = transformed.map((t) => ({
+    ...t,
+    state: t.state === "-1" ? t.stateByCode : t.state,
+  }));
+
+  for (let i = 0; i < newArray.length; i++) {
+    const a = newArray[i];
+    // remove duplicated states data for now
+    delete a.stateByCode;
+  }
+
+  return newArray;
+};
+
 const transformData = (data) => {
   let transformed = data.map(transform);
 
-  //remove defected data (input state does not match state from postcode)
-  //keep the state with -1, we can use the state from postcode for it instead
-  transformed = transformed.filter(
-    (t) => t.state === t.stateByCode || t.state === "-1"
-  );
+  transformed = removeDefected(transformed);
 
   //remove duplicates
   return removeDuplicates(transformed);
@@ -64,13 +97,12 @@ const transform = (item) => ({
   dayOfWeek: getDay(item.Date),
   postcode: item.Postcode,
   stateByCode: getStateByPostcode(item.Postcode),
+  state: getState(item.State),
   sample: {
     sku: `61-${item.Sample.split(" - ")[0].replace(/\s/g, "").toLowerCase()}`,
     product: item.Sample.split(" - ")[0],
-    flavour: item.Sample.split(" - ")[1],
+    flavour: item.Sample.split(" - ")[1] || "N/A",
   },
-
-  state: getState(item.State),
 });
 
 // get states inputted by users and transform them into the correct format
@@ -106,7 +138,7 @@ const getDay = (string) => {
 
 //get state by postcode
 const getStateByPostcode = (code) => {
-  let state = "";
+  let state = "-1";
   for (let i = 0; i < STATES.length; i++) {
     for (let j = 0; j < STATES[i].ranges.length; j++) {
       if (code >= STATES[i].ranges[j].from && code <= STATES[i].ranges[j].to) {
@@ -120,4 +152,5 @@ const getStateByPostcode = (code) => {
 module.exports = {
   transformData,
   checkProperties,
+  checkEmptyProperties,
 };
