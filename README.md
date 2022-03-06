@@ -1,5 +1,7 @@
 # data-visualizer
 
+DEMO: https://bulk-nutrient-data-visualizer.herokuapp.com/
+
 Prerequisite
 - NODE v16
 
