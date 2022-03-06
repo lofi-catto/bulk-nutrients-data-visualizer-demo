@@ -38,8 +38,10 @@ function SamplesByState({ defaultData }) {
   }, []);
 
   return (
-    <div style={{ width: 700 }}>
-      <BarChart options={options} chartData={chartData} />
+    <div className="chart-wrapper">
+      <div className="chart">
+        <BarChart options={options} chartData={chartData} />
+      </div>
     </div>
   );
 }

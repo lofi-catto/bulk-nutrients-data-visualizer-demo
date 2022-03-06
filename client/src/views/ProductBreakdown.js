@@ -122,15 +122,15 @@ function ProductBreakdown({ defaultData }) {
   };
 
   return (
-    <div style={{ display: "flex" }}>
-      <div style={{ width: "50%" }}>
+    <div className="chart-wrapper">
+      <div className="chart">
         <PieChart
           onClickSection={onClickSection}
           options={options}
           chartData={chartData}
         />
       </div>
-      <div style={{ width: "50%" }}>
+      <div className="chart">
         <BarChart options={barChartDataOptions} chartData={barChartData} />
       </div>
     </div>

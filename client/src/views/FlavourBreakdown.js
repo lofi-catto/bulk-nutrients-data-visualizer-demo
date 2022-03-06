@@ -123,15 +123,15 @@ function FlavourBreakdown({ defaultData }) {
   };
 
   return (
-    <div style={{ display: "flex" }}>
-      <div style={{ width: "50%" }}>
+    <div className="chart-wrapper">
+      <div className="chart">
         <DoughnutChart
           onClickSection={onClickSection}
           options={doughnutChartDataOptions}
           chartData={doughnutChartData}
         />
       </div>
-      <div style={{ width: "50%" }}>
+      <div className="chart">
         <BarChart options={barChartDataOptions} chartData={barChartData} />
       </div>
     </div>

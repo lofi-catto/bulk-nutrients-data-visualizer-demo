@@ -182,6 +182,28 @@ const getDuplicates = async (req, res = response) => {
   res.json(arr);
 };
 
+// get statistics
+const getStats = async (req, res = response) => {
+  const users = getDuplicatedUsers();
+  const groups = users.reduce((groups, item) => {
+    const group = groups[item.fullName] || [];
+    group.push(item);
+    groups[item.fullName] = group;
+    return groups;
+  }, {});
+
+  const duplicatesRemoved = users.length - Object.keys(groups).length;
+  const defected = ORIGINAL.length - PROCESSED.length - duplicatesRemoved;
+  const stats = {
+    totalRequests: ORIGINAL.length,
+    totalCleanedRequests: PROCESSED.length,
+    duplicatesRemoved: duplicatesRemoved,
+    defected: defected,
+  };
+
+  res.json(stats);
+};
+
 const processData = (data) => {
   // check for missing properties in original data
   // check for empty properties in original data
@@ -200,4 +222,5 @@ module.exports = {
   getMostPopular,
   getDuplicates,
   getData,
+  getStats,
 };

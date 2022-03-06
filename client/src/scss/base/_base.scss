@@ -1,0 +1,79 @@
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+p {
+  color: #7f7e7e;
+}
+
+a {
+  text-decoration: none;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+
+  .title {
+    text-align: center;
+    h2 {
+      margin-top: 5%;
+      margin-bottom: 2.5%;
+    }
+  }
+
+  .section-title {
+    text-align: center;
+    margin-top: 2.5%;
+  }
+
+  .chart-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2.5% 0;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+    }
+
+    .chart {
+      width: 50%;
+
+      @media (max-width: 768px) {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.overview {
+  margin: 0 auto;
+}
+
+.custom-card {
+  width: 18rem;
+  background-color: #249ee1;
+  border-radius: 0;
+
+  .card-title {
+    font-size: 30px;
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 20px;
+  }
+
+  .card-text,
+  .card-body,
+  p {
+    color: #fff;
+  }
+}

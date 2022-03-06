@@ -33,6 +33,7 @@ const checkEmptyProperties = (data) => {
 //  Any data with the same full name, postcode and state will be considered duplicated
 let DUPLICATES = [];
 removeDuplicates = (arr) => {
+  // set takes only unique item -> duplicates can have one
   const uniqueIds = new Set();
   const duplicateIds = [];
 
@@ -46,6 +47,7 @@ removeDuplicates = (arr) => {
     if (!isDuplicate) {
       return true;
     } else {
+      // get unique ids of duplicates
       if (!duplicateIds.filter((d) => d === id).length) {
         duplicateIds.push(id);
       }
@@ -53,6 +55,7 @@ removeDuplicates = (arr) => {
     }
   });
 
+  // get all duplicates (including the ones in the set)
   DUPLICATES = arr.filter((p) =>
     duplicateIds.includes(`${p.fullName}${p.postcode}${p.state}`)
   );
@@ -95,6 +98,7 @@ const transformData = (data) => {
   return removeDuplicates(transformed);
 };
 
+// have 2 types of state (state vs stateByCode) to compare user input
 const transform = (item) => ({
   firstName: capitalizeFirstLetter(item.FirstName),
   lastName: capitalizeFirstLetter(item.LastName),
@@ -120,7 +124,7 @@ const getState = (s) => {
   let state = "-1";
 
   for (let i = 0; i < STATES.length; i++) {
-    // remove punctualtions from string
+    // remove punctualtions from user input
     if (
       s.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "") ===
         STATES[i].name.toLowerCase() ||

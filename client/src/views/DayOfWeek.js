@@ -37,8 +37,10 @@ function DayOfWeek({ defaultData }) {
   }, []);
 
   return (
-    <div style={{ width: 700 }}>
-      <LineChart options={options} chartData={chartData} />
+    <div className="chart-wrapper">
+      <div className="chart">
+        <LineChart options={options} chartData={chartData} />
+      </div>
     </div>
   );
 }
