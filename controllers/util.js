@@ -29,10 +29,12 @@ const checkEmptyProperties = (data) => {
   });
 };
 
+// Don't know if a user is allowed to get multiple sample ? Asumming No in this project
 //  Any data with the same full name, postcode and state will be considered duplicated
+let DUPLICATES = [];
 removeDuplicates = (arr) => {
   const uniqueIds = new Set();
-  let count = 0;
+  const duplicateIds = [];
 
   const unique = arr.filter((element) => {
     // use full name, post code and state to create unique ids
@@ -43,15 +45,22 @@ removeDuplicates = (arr) => {
 
     if (!isDuplicate) {
       return true;
+    } else {
+      if (!duplicateIds.filter((d) => d === id).length) {
+        duplicateIds.push(id);
+      }
+      return false;
     }
-    // else {
-    //   count++;
-    //   console.warn(id);
-    // }
   });
+
+  DUPLICATES = arr.filter((p) =>
+    duplicateIds.includes(`${p.fullName}${p.postcode}${p.state}`)
+  );
 
   return unique;
 };
+
+const getDuplicatedUsers = () => DUPLICATES;
 
 const removeDefected = (arr) => {
   //remove defected data (input state does not match state from postcode or both equal -1)
@@ -153,4 +162,5 @@ module.exports = {
   transformData,
   checkProperties,
   checkEmptyProperties,
+  getDuplicatedUsers,
 };

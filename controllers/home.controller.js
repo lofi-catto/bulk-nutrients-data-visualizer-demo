@@ -4,7 +4,9 @@ const {
   checkProperties,
   transformData,
   checkEmptyProperties,
+  getDuplicatedUsers,
 } = require("./util");
+
 const EXTRERNAL_URL =
   "https://secure.bulknutrients.com.au/content/bEzWsxcHPewMt/sampledata.json";
 
@@ -158,6 +160,28 @@ const getMostPopular = async (req, res = response) => {
   res.json(arr);
 };
 
+// get duplicates
+const getDuplicates = async (req, res = response) => {
+  const users = getDuplicatedUsers();
+  const arr = [];
+  const groups = users.reduce((groups, item) => {
+    const group = groups[item.fullName] || [];
+    group.push(item);
+    groups[item.fullName] = group;
+    return groups;
+  }, {});
+
+  for (const [key, value] of Object.entries(groups)) {
+    arr.push({
+      username: `${key}`,
+      orders: value,
+      count: value.length,
+    });
+  }
+
+  res.json(arr);
+};
+
 const processData = (data) => {
   // check for missing properties in original data
   // check for empty properties in original data
@@ -174,5 +198,6 @@ module.exports = {
   getDayGroups,
   getFlavourGroups,
   getMostPopular,
+  getDuplicates,
   getData,
 };

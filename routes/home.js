@@ -9,6 +9,7 @@ const {
   getStateGroups,
   getFlavourGroups,
   getDayGroups,
+  getDuplicates,
 } = require("../controllers/home.controller");
 
 router.get("/data", getData);
@@ -18,5 +19,6 @@ router.get("/flavour-groups", getFlavourGroups);
 router.get("/day-groups", getDayGroups);
 router.get("/popular", getMostPopular);
 router.get("/external", getExternalData);
+router.get("/duplicates", getDuplicates);
 
 module.exports = router;
